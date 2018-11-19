@@ -1,0 +1,38 @@
+.form-label,
+.form-control {
+	font-size: 4em;
+}
+
+.form-control {
+	height: 2em;
+}
+
+.form-group {
+	margin-bottom: 6em;
+}
+
+.radio-label {
+	width: 35vw;
+	font-size: 6em;
+}
+
+.find-address {
+	font-size: 4em;
+	width: 1.5em;
+}
+
+/* Changed the color of radio button if it is checked */
+.radio-label .radio-toggle[type='radio']:checked ~ span {
+	color: #78a025 !important;
+}
+
+.new-tip-title {
+	font-size: 8em;
+	text-align: center;
+	margin-bottom: 1em;
+}
+
+.body-padding {
+	width: 0;
+	height: 0;
+}

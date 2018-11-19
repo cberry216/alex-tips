@@ -7,6 +7,9 @@
 			integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u"
 			crossorigin="anonymous"
 		/>
+        <link rel="stylesheet" type="text/css" href="/css/style.css" />
+        <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css" integrity="sha384-B4dIYHKNBt8Bc12p+WXckhzcICo0wtJAoU8YZTY5qE0Id1GSseTk6S+L3BlXeVIU"
+            crossorigin="anonymous">
 		<script
 			src="https://code.jquery.com/jquery-3.3.1.min.js"
 			integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
@@ -21,10 +24,50 @@
 	<body>
 		<div class="container">
 			<div class="align-self-center">
-				<div class="col-12">
-					<h1 class="new-tip-title">New Tip</h1>
-					<h2></h2>
-				</div>
+				<div class="col-8">
+                    <h1 class="new-tip-title">New Tip</h1>
+                    <hr>
+					<form>
+                        <div class="form-group">
+                            <label class="form-label" for="tip-address">Address</label>
+                            <input class="form-control" id="tip-address" type="text" placeholder="Enter address">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="tip-total">Total</label>
+                            <input class="form-control" id="tip-total" type="number" placeholder="Enter Total Amount">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="tip-amount">Tip</label>
+                            <input class="form-control" id="tip-amount" type="number" placeholder="Enter Tip Amount">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="tip-gender">Gender</label>
+                            <div class="input-group" id="tip-gender">
+                                <div class="btn-group" data-toggle="buttons">
+                                    <label class="btn btn-secondary radio-label active">
+                                        <input class="radio-toggle" type="radio" name="gender" id="male" checked><span>Male</span></label>
+                                    <label class="btn btn-secondary radio-label">
+                                        <input class="radio-toggle" type="radio" name="gender" id="female"><span>Female</span></label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="tip-age">Age Range</label>
+                            <div class="input-group" id="tip-age">
+                                <div class="btn-group" data-toggle="buttons">
+                                    <label class="btn btn-secondary radio-label active">
+                                        <input class="radio-toggle" type="radio" name="age" id="child" checked><span>Child</span></label>
+                                    <label class="btn btn-secondary radio-label">
+                                        <input class="radio-toggle" type="radio" name="age" id="teen"><span>Teen</span></label>
+                                    <label class="btn btn-secondary radio-label">
+                                        <input class="radio-toggle" type="radio" name="age" id="adult" checked><span>Adult</span></label>
+                                    <label class="btn btn-secondary radio-label">
+                                        <input class="radio-toggle" type="radio" name="age" id="elder"><span>Elder</span></label>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
 			</div>
 		</div>
 	</body>
