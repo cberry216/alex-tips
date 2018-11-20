@@ -19,7 +19,9 @@
 			src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"
 			integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa"
 			crossorigin="anonymous"
-		></script>
+        ></script>
+        <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyARwDCZ873N011fIXBvMWHu1LlNq4Wdxfg&libraries=places"></script>
+        <script type="text/javascript" src="/js/autoaddress.js"></script>
 	</head>
 	<body>
 		<div class="container">
@@ -30,15 +32,28 @@
 					<form>
                         <div class="form-group">
                             <label class="form-label" for="tip-address">Address</label>
-                            <input class="form-control" id="tip-address" type="text" placeholder="Enter address">
+                            <input class="form-control controls" id="tip-address" type="text" placeholder="Enter address">
+                            <div id="map-canvas"></div>
                         </div>
                         <div class="form-group">
                             <label class="form-label" for="tip-total">Total</label>
-                            <input class="form-control" id="tip-total" type="number" step="0.01" placeholder="Enter Total Amount">
+                            <!-- <input class="form-control" id="tip-total" type="number" step="0.01" placeholder="Enter Total Amount"> -->
+                            <div class="input-group mb-3 form-control" id="tip-total">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text" id="dollar">$</span>
+                                </div>
+                                <input class="money-input" type="text" placeholder="Enter total amount" aria-describedby="dollar">
+                            </div>
                         </div>
                         <div class="form-group">
                             <label class="form-label" for="tip-amount">Tip</label>
-                            <input class="form-control" id="tip-amount" type="number" step="0.01" placeholder="Enter Tip Amount">
+                            <!-- <input class="form-control" id="tip-amount" type="number" step="0.01" placeholder="Enter Tip Amount"> -->
+                            <div class="input-group mb-3 form-control" id="tip-amount">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text" id="plus-dollar">+$</span>
+                                </div>
+                                <input class="money-input" type="text" placeholder="Enter tip amount" aria-describedby="plus-dollar">
+                            </div>
                         </div>
                         <div class="form-group">
                             <label class="form-label" for="tip-gender">Gender</label>
@@ -60,12 +75,13 @@
                                     <label class="btn btn-secondary radio-label">
                                         <input class="radio-toggle" type="radio" name="age" id="teen"><span>Teen</span></label>
                                     <label class="btn btn-secondary radio-label">
-                                        <input class="radio-toggle" type="radio" name="age" id="adult" checked><span>Adult</span></label>
+                                        <input class="radio-toggle" type="radio" name="age" id="adult"><span>Adult</span></label>
                                     <label class="btn btn-secondary radio-label">
                                         <input class="radio-toggle" type="radio" name="age" id="elder"><span>Elder</span></label>
                                 </div>
                             </div>
                         </div>
+                        <button type="submit" class="btn btn-primary submit-button">Submit</button>
                     </form>
                 </div>
 			</div>
