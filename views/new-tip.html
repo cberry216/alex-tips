@@ -1,90 +1,114 @@
 <!DOCTYPE html>
 <html>
-	<head>
-		<link
-			rel="stylesheet"
-			href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
-			integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u"
-			crossorigin="anonymous"
-		/>
-        <link rel="stylesheet" type="text/css" href="/css/style.css" />
-        <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css" integrity="sha384-B4dIYHKNBt8Bc12p+WXckhzcICo0wtJAoU8YZTY5qE0Id1GSseTk6S+L3BlXeVIU"
-            crossorigin="anonymous">
-		<script
-			src="https://code.jquery.com/jquery-3.3.1.min.js"
-			integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
-			crossorigin="anonymous"
-		></script>
-		<script
-			src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"
-			integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa"
-			crossorigin="anonymous"
-        ></script>
-        <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyARwDCZ873N011fIXBvMWHu1LlNq4Wdxfg&libraries=places"></script>
-        <script type="text/javascript" src="/js/autoaddress.js"></script>
-	</head>
-	<body>
-		<div class="container">
-			<div class="align-self-center">
-				<div class="col-8">
-                    <h1 class="new-tip-title">New Tip</h1>
-                    <hr>
-					<form>
-                        <div class="form-group">
-                            <label class="form-label" for="tip-address">Address</label>
+
+<head>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u"
+        crossorigin="anonymous" />
+    <link rel="stylesheet" type="text/css" href="/css/style.css" />
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css" integrity="sha384-B4dIYHKNBt8Bc12p+WXckhzcICo0wtJAoU8YZTY5qE0Id1GSseTk6S+L3BlXeVIU"
+        crossorigin="anonymous">
+</head>
+
+<body>
+    <div class="container">
+        <div class="align-self-center">
+            <div class="col-8">
+                <h1 class="new-tip-title">New Tip</h1>
+                <hr>
+                <form>
+                    <div class="form-group">
+                        <label class="form-label" for="tip-address">Address</label>
+                        <div class="input-group">
                             <input class="form-control controls" id="tip-address" type="text" placeholder="Enter address">
-                            <div id="map-canvas"></div>
+                            <span class="input-group-btn">
+                                <button class="btn btn-default" id="find-address" type="button" data-toggle="modal"
+                                    data-target="#mapModal" onclick="addMap()"><i class="fas fa-map-marker-alt"></i></button>
+                            </span>
                         </div>
-                        <div class="form-group">
-                            <label class="form-label" for="tip-total">Total</label>
-                            <!-- <input class="form-control" id="tip-total" type="number" step="0.01" placeholder="Enter Total Amount"> -->
-                            <div class="input-group mb-3 form-control" id="tip-total">
-                                <div class="input-group-prepend">
-                                    <span class="input-group-text" id="dollar">$</span>
-                                </div>
-                                <input class="money-input" type="text" placeholder="Enter total amount" aria-describedby="dollar">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="tip-total">Total</label>
+                        <!-- <input class="form-control" id="tip-total" type="number" step="0.01" placeholder="Enter Total Amount"> -->
+                        <div class="input-group mb-3 form-control" id="tip-total">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text" id="dollar">$</span>
+                            </div>
+                            <input class="money-input" type="text" placeholder="Enter total amount" aria-describedby="dollar">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="tip-amount">Tip</label>
+                        <!-- <input class="form-control" id="tip-amount" type="number" step="0.01" placeholder="Enter Tip Amount"> -->
+                        <div class="input-group mb-3 form-control" id="tip-amount">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text" id="plus-dollar">+$</span>
+                            </div>
+                            <input class="money-input" type="text" placeholder="Enter tip amount" aria-describedby="plus-dollar">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="tip-gender">Gender</label>
+                        <div class="input-group" id="tip-gender">
+                            <div class="btn-group" data-toggle="buttons">
+                                <label class="btn btn-secondary radio-label active">
+                                    <input class="radio-toggle" type="radio" name="gender" id="male" checked><span>Male</span></label>
+                                <label class="btn btn-secondary radio-label">
+                                    <input class="radio-toggle" type="radio" name="gender" id="female"><span>Female</span></label>
                             </div>
                         </div>
-                        <div class="form-group">
-                            <label class="form-label" for="tip-amount">Tip</label>
-                            <!-- <input class="form-control" id="tip-amount" type="number" step="0.01" placeholder="Enter Tip Amount"> -->
-                            <div class="input-group mb-3 form-control" id="tip-amount">
-                                <div class="input-group-prepend">
-                                    <span class="input-group-text" id="plus-dollar">+$</span>
-                                </div>
-                                <input class="money-input" type="text" placeholder="Enter tip amount" aria-describedby="plus-dollar">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="tip-age">Age Range</label>
+                        <div class="input-group" id="tip-age">
+                            <div class="btn-group" data-toggle="buttons">
+                                <label class="btn btn-secondary radio-label active">
+                                    <input class="radio-toggle" type="radio" name="age" id="child" checked><span>Child</span></label>
+                                <label class="btn btn-secondary radio-label">
+                                    <input class="radio-toggle" type="radio" name="age" id="teen"><span>Teen</span></label>
+                                <label class="btn btn-secondary radio-label">
+                                    <input class="radio-toggle" type="radio" name="age" id="adult"><span>Adult</span></label>
+                                <label class="btn btn-secondary radio-label">
+                                    <input class="radio-toggle" type="radio" name="age" id="elder"><span>Elder</span></label>
                             </div>
                         </div>
-                        <div class="form-group">
-                            <label class="form-label" for="tip-gender">Gender</label>
-                            <div class="input-group" id="tip-gender">
-                                <div class="btn-group" data-toggle="buttons">
-                                    <label class="btn btn-secondary radio-label active">
-                                        <input class="radio-toggle" type="radio" name="gender" id="male" checked><span>Male</span></label>
-                                    <label class="btn btn-secondary radio-label">
-                                        <input class="radio-toggle" type="radio" name="gender" id="female"><span>Female</span></label>
+                    </div>
+                    <button type="submit" class="btn btn-primary submit-button">Submit</button>
+                </form>
+
+
+                <!-- Google Map Modal -->
+                <div class="modal" id="mapModal" tabindex="-1" role="dialog" aria-labelledby="mapModalLabel">
+                    <div class="modal-align-vertically">
+                        <div class="modal-dialog modal-lg" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="mapModalLabel">Get Location</h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body">
+                                    <div id="map"></div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                                 </div>
                             </div>
                         </div>
-                        <div class="form-group">
-                            <label class="form-label" for="tip-age">Age Range</label>
-                            <div class="input-group" id="tip-age">
-                                <div class="btn-group" data-toggle="buttons">
-                                    <label class="btn btn-secondary radio-label active">
-                                        <input class="radio-toggle" type="radio" name="age" id="child" checked><span>Child</span></label>
-                                    <label class="btn btn-secondary radio-label">
-                                        <input class="radio-toggle" type="radio" name="age" id="teen"><span>Teen</span></label>
-                                    <label class="btn btn-secondary radio-label">
-                                        <input class="radio-toggle" type="radio" name="age" id="adult"><span>Adult</span></label>
-                                    <label class="btn btn-secondary radio-label">
-                                        <input class="radio-toggle" type="radio" name="age" id="elder"><span>Elder</span></label>
-                                </div>
-                            </div>
-                        </div>
-                        <button type="submit" class="btn btn-primary submit-button">Submit</button>
-                    </form>
+                    </div>
                 </div>
-			</div>
-		</div>
-	</body>
+                <!-- End Google Map Modal -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+        crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa"
+        crossorigin="anonymous"></script>
+    <script type="text/javascript" src="/js/form.js"></script>
+    <script async defer type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyARwDCZ873N011fIXBvMWHu1LlNq4Wdxfg&libraries=places"></script>
+</body>
+
 </html>

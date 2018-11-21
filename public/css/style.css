@@ -12,8 +12,23 @@
 	font-size: 0.75em;
 }
 
+#find-address {
+	width: 6em;
+	height: 6em;
+}
+
+#find-address i {
+	font-size: 4em;
+}
+
+#map {
+	height: 100%;
+	width: 100%;
+}
+
 .money-input {
 	margin-left: 0.5em;
+	width: 100%;
 }
 
 .form-label,
@@ -34,11 +49,6 @@
 	font-size: 4em !important;
 }
 
-.find-address {
-	font-size: 4em;
-	width: 1.5em;
-}
-
 /* Changed the color of radio button if it is checked */
 .radio-label .radio-toggle[type='radio']:checked ~ span {
 	color: #78a025;
@@ -55,6 +65,43 @@
 	margin: 3vh 0 4vh 0;
 	font-size: 3em;
 	background-color: #78a025;
+}
+
+/* Adjust size of google maps autocomplete dropdown */
+.pac-item {
+	font-size: 2em;
+	height: 2em;
+	padding: 20px 0;
+}
+
+/* Adjust size of google maps autocomplete dropdown */
+.pac-item span {
+	font-size: 1em;
+}
+
+.modal-align-vertically {
+	margin: 30% 0 30% 0;
+}
+
+.modal-header h5,
+.modal-header span {
+	font-size: 3em;
+}
+
+.modal-header h5 {
+	margin-right: 45%;
+}
+
+.modal-header {
+	display: flex;
+}
+
+.modal-body {
+	height: 40vh;
+}
+
+.modal-footer button {
+	font-size: 3em;
 }
 
 hr {
