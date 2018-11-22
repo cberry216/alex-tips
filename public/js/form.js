@@ -1,11 +1,10 @@
 /* global google */
 
-var map, infoWindow;
+var map, infoWindow, currPosition;
 
 function initMap() {
 	options = { zoom: 8, mapTypeId: google.maps.MapTypeId.ROADMAP };
 	map = new google.maps.Map(document.getElementById('map'), options);
-	console.log(map.zoom);
 	infoWindow = new google.maps.InfoWindow();
 }
 
@@ -25,32 +24,57 @@ function initAutocomplete() {
 	var autocomplete = new google.maps.places.Autocomplete(input, options);
 }
 
-function run() {
-	initMap();
-	initAutocomplete();
-}
-
-function addMap() {
-	// console.log('Map Added.');
+function getLocation() {
 	if (navigator.geolocation) {
 		navigator.geolocation.getCurrentPosition(
 			position => {
-				var pos = {
-					lat: position.coords.latitude,
-					lat: position.coords.longitude
-				};
-
-				infoWindow.setPosition(pos);
-				infoWindow.setContent('Address found');
-				infoWindow.open(map);
+				currPosition = position;
 			},
 			() => {
-				handleLocationError(true, infoWindow, map.getCenter());
+				console.log('location not found.');
 			}
 		);
 	} else {
-		handleLocationError(false, infoWindow, map.getCenter());
+		console.log('geolocation not enabled.');
 	}
+}
+
+function run() {
+	initMap();
+	initAutocomplete();
+	getLocation();
+}
+
+function addMap() {
+	// if (navigator.geolocation) {
+	// 	console.log('Has Geolocation.');
+	// 	navigator.geolocation.getCurrentPosition(
+	// 		position => {
+	// 			console.log(position.coords);
+	// 			var pos = {
+	// 				lat: position.coords.latitude,
+	// 				lng: position.coords.longitude
+	// 			};
+	// 			console.log(pos);
+	// 			infoWindow.setPosition(pos);
+	// 			infoWindow.setContent('Address found');
+	// 			infoWindow.open(map);
+	// 		},
+	// 		() => {
+	// 			handleLocationError(true, infoWindow, map.getCenter());
+	// 		}
+	// 	);
+	// } else {
+	// 	handleLocationError(false, infoWindow, map.getCenter());
+	// }
+	pos = {
+		lat: currPosition.coords.latitude,
+		lng: currPosition.coords.longitude
+	};
+	console.log(pos);
+	infoWindow.setPosition(pos);
+	infoWindow.setContent('Address Found');
+	infoWindow.open(map);
 	// google.maps.event.trigger(map, 'resize');
 }
 
@@ -68,3 +92,5 @@ function handleLocationError(browserHasGeolocation, infoWindow, pos) {
 // function geocodeLatLng(geocoder, map, infoWindow) {}
 
 window.onload = run;
+
+document.getElementById('find-address').onclick = addMap;
