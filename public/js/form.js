@@ -1,9 +1,16 @@
 /* global google */
 
-var map, infoWindow, currPosition;
+var map, autoMap, infoWindow;
+
+var currPosition = { coords: { latitude: 41.864995, longitude: -71.274469 } };
 
 function initMap() {
-	options = { zoom: 8, mapTypeId: google.maps.MapTypeId.ROADMAP };
+	options = {
+		center: { lat: 41.866254, lng: -71.249101 },
+		zoom: 17,
+		mapTypeId: google.maps.MapTypeId.ROADMAP
+	};
+	autoMap = new google.maps.Map(document.getElementById('auto-map'));
 	map = new google.maps.Map(document.getElementById('map'), options);
 	infoWindow = new google.maps.InfoWindow();
 }
@@ -18,7 +25,7 @@ function initAutocomplete() {
 
 	// Get the HTML input element for the autocomplete search box
 	var input = document.getElementById('tip-address');
-	map.controls[google.maps.ControlPosition.TOP_LEFT].push(input);
+	autoMap.controls[google.maps.ControlPosition.TOP_LEFT].push(input);
 
 	// Create the autocomplete object
 	var autocomplete = new google.maps.places.Autocomplete(input, options);
@@ -46,36 +53,14 @@ function run() {
 }
 
 function addMap() {
-	// if (navigator.geolocation) {
-	// 	console.log('Has Geolocation.');
-	// 	navigator.geolocation.getCurrentPosition(
-	// 		position => {
-	// 			console.log(position.coords);
-	// 			var pos = {
-	// 				lat: position.coords.latitude,
-	// 				lng: position.coords.longitude
-	// 			};
-	// 			console.log(pos);
-	// 			infoWindow.setPosition(pos);
-	// 			infoWindow.setContent('Address found');
-	// 			infoWindow.open(map);
-	// 		},
-	// 		() => {
-	// 			handleLocationError(true, infoWindow, map.getCenter());
-	// 		}
-	// 	);
-	// } else {
-	// 	handleLocationError(false, infoWindow, map.getCenter());
-	// }
 	pos = {
 		lat: currPosition.coords.latitude,
 		lng: currPosition.coords.longitude
 	};
 	console.log(pos);
 	infoWindow.setPosition(pos);
-	infoWindow.setContent('Address Found');
+	infoWindow.setContent('6 Fuller Street, Rehoboth, MA, 02769');
 	infoWindow.open(map);
-	// google.maps.event.trigger(map, 'resize');
 }
 
 function handleLocationError(browserHasGeolocation, infoWindow, pos) {

@@ -22,7 +22,7 @@
 }
 
 #map {
-	height: 100%;
+	height: 50em;
 	width: 100%;
 }
 
@@ -102,6 +102,16 @@
 
 .modal-footer button {
 	font-size: 3em;
+}
+
+.gm-style-iw {
+	width: 300px !important;
+	font-size: 3em !important;
+	text-align: center;
+}
+
+.gm-style-iw * {
+	color: #465e17;
 }
 
 hr {
