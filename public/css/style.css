@@ -26,6 +26,10 @@
 	width: 100%;
 }
 
+#sign-in {
+	border: 1px solid white;
+}
+
 .money-input {
 	margin-left: 0.5em;
 	width: 100%;
@@ -113,6 +117,73 @@
 
 .gm-style-iw * {
 	color: #465e17;
+}
+
+.navbar {
+	border-radius: 0;
+}
+
+.grid-container {
+	display: grid;
+	position: fixed;
+	grid-template-columns: 30vw 70vw;
+	grid-template-rows: 100vh;
+}
+
+.profile {
+	grid-column-start: 1;
+	grid-column-end: 2;
+	background-color: #b4c4d0;
+	display: block;
+}
+
+.data {
+	grid-column-start: 2;
+	/* grid-column-end: 3; */
+	background-color: white;
+}
+
+.profile-card {
+	width: 80%;
+	height: 80%;
+	margin: 15% 10%;
+	align-content: center;
+	display: inline-block;
+}
+
+.profile-picture {
+	position: relative;
+	width: 50%;
+	margin: 10% auto 5% auto;
+	border-radius: 50%;
+	background-color: white;
+}
+
+/* Makes profile picutre perfect square */
+.profile-picture:before {
+	content: '';
+	display: block;
+	padding-top: 100%;
+}
+
+.profile-daily-total {
+	text-align: center;
+	margin-bottom: 5%;
+}
+
+.profile-data {
+	margin: 0 auto;
+}
+
+.profile-item {
+	margin-bottom: 5vh;
+}
+
+.profile-data-row td,
+.profile-data-row th {
+	padding-bottom: 1vh;
+	padding-left: 1vw;
+	padding-right: 1vw;
 }
 
 hr {
