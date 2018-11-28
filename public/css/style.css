@@ -30,6 +30,12 @@
 	border: 1px solid white;
 }
 
+#add-new-tip {
+	background-color: rgba(0, 0, 0, 0);
+	width: 3em !important;
+	font-size: 3em;
+}
+
 .money-input {
 	margin-left: 0.5em;
 	width: 100%;
@@ -184,6 +190,18 @@
 	padding-bottom: 1vh;
 	padding-left: 1vw;
 	padding-right: 1vw;
+}
+
+.add-tip-button {
+	text-align: center;
+}
+
+.add-tip-button h5 {
+	margin-bottom: 0;
+}
+
+.add-tip-button button {
+	padding-top: 0;
 }
 
 hr {

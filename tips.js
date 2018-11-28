@@ -22,6 +22,10 @@ app.get('/', (req, res) => {
 	res.sendFile('dashboard.html', viewOptions);
 });
 
+app.get('/tip', (req, res) => {
+	res.sendFile('new-tip.html', viewOptions);
+});
+
 // app.listen(app.get('port'), function() {
 // 	console.log(
 // 		'Express started on http://localhost:' +
