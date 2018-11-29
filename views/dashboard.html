@@ -20,11 +20,11 @@
                 <div class="profile-picture profile-item"></div>
                 <div class="profile-daily-total profile-item">
                     <h5>Total Tips Today</h5>
-                    <h4>$25.50</h4>
+                    <h4 id="total-daily-tips"></h4>
                 </div>
                 <div class="profile-daily-total profile-item">
                     <h5>Dollar per Mile</h5>
-                    <h4>$1.20</h4>
+                    <h4 id="total-dollar-per-mile"></h4>
                 </div>
                 <table class="profile-data profile-item">
                     <tr class="profile-data-row">
@@ -34,18 +34,18 @@
                     </tr>
                     <tr class="profile-data-row">
                         <td class="data-title" align="right">Tip</td>
-                        <td style="padding-left: 15px">$15.00</td>
-                        <td style="padding-left: 15px">$100.00</td>
+                        <td style="padding-left: 15px" id="max-daily-tip"></td>
+                        <td style="padding-left: 15px" id="max-all-tip"></td>
                     </tr>
                     <tr class="profile-data-row">
                         <td class="data-title" align="right">Total</td>
-                        <td style="padding-left: 15px">$250.00</td>
-                        <td style="padding-left: 15px">$550.00</td>
+                        <td style="padding-left: 15px" id="max-daily-total"></td>
+                        <td style="padding-left: 15px" id="max-all-total"></td>
                     </tr>
                     <tr class="profile-data-row">
                         <td class="data-title" align="right">Dist.</td>
-                        <td style="padding-left: 15px">8 miles</td>
-                        <td style="padding-left: 15px">12 miles</td>
+                        <td style="padding-left: 15px" id="max-daily-dist">8 miles</td>
+                        <td style="padding-left: 15px" id="max-all-dist">12 miles</td>
                     </tr>
                 </table>
                 <div class="add-tip-button">
@@ -56,18 +56,19 @@
                 </div>
             </div>
         </div>
-        <div class="data"></div>
-    </div>
-
-    <!-- Scripts -->
+        <div class="data">
+            <div id="average-tip-vs-gender"></div>
+        </div>
+    </div> <!-- Scripts -->
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
         crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49"
         crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy"
         crossorigin="anonymous"></script>
-    <!-- <script type="text/javascript" src="/js/form.js"></script> -->
     <script async defer type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyARwDCZ873N011fIXBvMWHu1LlNq4Wdxfg&libraries=places"></script>
+    <script src="https://d3js.org/d3.v4.min.js"></script>
+    <script type="text/javascript" src="/js/data.js"></script>
 </body>
 
 </html>
