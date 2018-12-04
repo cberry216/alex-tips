@@ -20,7 +20,7 @@ for (var i = 0; i < 10; i++) {
 		total: +total,
 		tip: +(total * (Math.random() * 0.5)).toFixed(2),
 		address: addresses[Math.floor(Math.random() * addresses.length)],
-		gender: Math.random() < 0.5 ? 'male' : 'female',
+		gender: Math.random() < 0.5 ? 'Male' : 'Female',
 		age: ages[Math.floor(Math.random() * ages.length)],
 		distance: Math.random() * 15
 	});
@@ -37,10 +37,39 @@ dataAllTime = [
 	}
 ];
 
+var margin, width, height, hGtW;
+margin = { top: 40, right: 0, bottom: 0, left: 0 };
+
 // Set dimensions
-var margin = { top: 10, right: 10, bottom: 10, left: 10 };
-var width = 450 - margin.left - margin.right,
-	height = 450 - margin.top - margin.bottom;
+function setDimensions(elemWidth, elemHeight) {
+	// Set hGtW to whether the height is greater than the width
+	hGtW = elemHeight > elemWidth;
+	console.log(hGtW);
+
+	// Get smallest dimension with margin included
+	var minDim = Math.min(
+		elemWidth - margin.left - margin.right,
+		elemHeight - margin.top - margin.bottom
+	);
+	console.log(minDim);
+
+	// Set the width and height to be a square with the margins
+	width = minDim - margin.left - margin.right;
+	if (hGtW) height = minDim;
+	else height = minDim - margin.top - margin.bottom;
+
+	// Set the left and right or top and bottom margin to half of the extra space based on hGtW
+	if (hGtW) {
+		margin.top = (elemHeight - minDim) / 2;
+		margin.bottom = margin.bottom + margin.top;
+	} else {
+		margin.left = margin.left + (elemWidth - minDim) / 2;
+		margin.right = margin.right + margin.left;
+	}
+
+	// Return length of the side of the square
+	return minDim;
+}
 
 function setDailyTotalTips() {
 	sum = 0;
@@ -82,15 +111,138 @@ function setDistanceMax() {
 	document.getElementById('max-all-dist').innerHTML = allMax + ' mi';
 }
 
+function generateTipVsGenderCompositeData() {
+	var compData = [{ gender: 'Male' }, { gender: 'Female' }];
+
+	var maleSum = 0;
+	var maleCount = 0;
+	var femaleSum = 0;
+	var femaleCount = 0;
+	for (var i = 0; i < data.length; i++) {
+		if (data[i].gender == 'Male') {
+			maleSum += data[i].tip;
+			maleCount++;
+		}
+		if (data[i].gender == 'Female') {
+			femaleSum += data[i].tip;
+			femaleCount++;
+		}
+	}
+
+	compData[0].averageTip = (maleSum / maleCount).toFixed(2);
+	compData[1].averageTip = (femaleSum / femaleCount).toFixed(2);
+
+	return compData;
+}
+
+// Create average tips vs. gender pie chart
 function averageTipVsGender() {
+	color = d3.scaleOrdinal().range(['#5b63fe', '#fe5bde']);
+	arcColor = d3.scaleOrdinal().range(['#767cfb', '#ff7ce5']);
+	labelColor = d3.scaleOrdinal().range(['#9296f4', '#ff9aeb']);
+
+	var chartWidth = document.getElementById('average-tip-vs-gender').offsetWidth;
+	var chartHeight = document.getElementById('average-tip-vs-gender')
+		.offsetHeight;
+	var radius = setDimensions(chartWidth, chartHeight) / 2;
+
+	var compData = generateTipVsGenderCompositeData();
+
+	var pie = d3
+		.pie()
+		.value(d => d.averageTip)
+		.sort(null)
+		.padAngle(0.025);
+
+	var arc = d3
+		.arc()
+		.innerRadius(radius * 0.66)
+		.outerRadius(radius);
+
+	var arcLabel = d3
+		.arc()
+		.innerRadius(radius * 0.4)
+		.outerRadius(radius * 0.4);
+
 	var svg = d3
 		.select('#average-tip-vs-gender')
 		.append('svg')
-		.attr('height', height + margin.top + margin.bottom)
-		.attr('width', width + margin.left + margin.right);
+		.attr('transform', 'translate(' + margin.left + ',' + margin.top + ')')
+		.attr('text-anchor', 'middle');
+
+	if (hGtW) {
+		svg
+			.attr('height', height)
+			.attr('width', width + margin.left + margin.right)
+			.style('font', '14px sans-serif');
+	} else {
+		svg
+			.attr('height', height + margin.top + margin.bottom)
+			.attr('width', width)
+			.style('font', '16px sans-serif');
+	}
+
+	var g = svg
+		.append('g')
+		.attr('transform', 'translate(' + radius + ',' + radius + ')');
+
+	g.selectAll('path')
+		.data(pie(compData))
+		.enter()
+		.append('path')
+		.attr('d', arc)
+		.attr('fill', d => {
+			return color(d.data.gender);
+		})
+		.attr('stroke', 'white')
+		.attr('id', d => 'arc-' + d.data.gender)
+		.on('mouseover', (d, i) => {
+			d3.select('#arc-' + d.data.gender).style('fill', arcColor(d.data.gender));
+			d3.select('#label-' + d.data.gender).style(
+				'text-shadow',
+				'0 0 2px' + labelColor(d.data.gender)
+			);
+		})
+		.on('mouseout', (d, i) => {
+			d3.select('#arc-' + d.data.gender).style('fill', color(d.data.gender));
+			d3.select('#label-' + d.data.gender).style(
+				'text-shadow',
+				'0 0 2px' + labelColor(d.data.gender)
+			);
+		})
+		.append('title')
+		.text(d => d.data.gender);
+
+	var text = g
+		.selectAll('text')
+		.data(pie(compData))
+		.enter()
+		.append('text')
+		.attr('transform', d => {
+			console.log(d.data.gender + ': ' + arcLabel.centroid(d));
+			return 'translate(' + arcLabel.centroid(d) + ')';
+		})
+		.attr('id', d => 'label-' + d.data.gender)
+		.attr('dy', '0.35em');
+
+	text
+		.append('tspan')
+		.attr('x', 0)
+		.attr('y', '-0.7em')
+		.attr('fill-opacity', 0.7)
+		.text(d => d.data.gender);
+
+	text
+		.append('tspan')
+		.attr('x', 0)
+		.attr('y', '0.7em')
+		.attr('fill-opacity', 0.5)
+		.text(d => '$' + d.data.averageTip);
 }
 
-function createGraphs() {}
+function createGraphs() {
+	averageTipVsGender();
+}
 
 function run() {
 	setDailyTotalTips();
@@ -99,7 +251,6 @@ function run() {
 	setTotalMax();
 	setDistanceMax();
 	createGraphs();
-	// console.log(data);
 }
 
 window.onload = run;
