@@ -14,7 +14,7 @@ addresses = [
 ages = ['<20', '20-30', '30-40', '40-50', '50+'];
 
 data = [];
-for (var i = 0; i < 10; i++) {
+for (var i = 0; i < 50; i++) {
 	total = ((Math.random() * 5000) / 100).toFixed(2);
 	data.push({
 		total: +total,
@@ -129,17 +129,33 @@ function generateTipVsGenderCompositeData() {
 		}
 	}
 
+	// Set average tips
 	compData[0].averageTip = (maleSum / maleCount).toFixed(2);
 	compData[1].averageTip = (femaleSum / femaleCount).toFixed(2);
+
+	// Set percentage of total tips
+	compData[0].percentage = ((maleSum / (maleSum + femaleSum)) * 100).toFixed(2);
+	compData[1].percentage = ((femaleSum / (maleSum + femaleSum)) * 100).toFixed(
+		2
+	);
 
 	return compData;
 }
 
 // Create average tips vs. gender pie chart
 function averageTipVsGender() {
-	color = d3.scaleOrdinal().range(['#5b63fe', '#fe5bde']);
-	arcColor = d3.scaleOrdinal().range(['#767cfb', '#ff7ce5']);
-	labelColor = d3.scaleOrdinal().range(['#9296f4', '#ff9aeb']);
+	color = d3
+		.scaleOrdinal()
+		.domain(['Male', 'Female'])
+		.range(['#5b63fe', '#fe5bde']);
+	arcColor = d3
+		.scaleOrdinal()
+		.domain(['Male', 'Female'])
+		.range(['#767cfb', '#ff7ce5']);
+	labelColor = d3
+		.scaleOrdinal()
+		.domain(['Male', 'Female'])
+		.range(['#9296f4', '#ff9aeb']);
 
 	var chartWidth = document.getElementById('average-tip-vs-gender').offsetWidth;
 	var chartHeight = document.getElementById('average-tip-vs-gender')
@@ -151,7 +167,7 @@ function averageTipVsGender() {
 	var pie = d3
 		.pie()
 		.value(d => d.averageTip)
-		.sort(null)
+		.sort(d => d.gender)
 		.padAngle(0.025);
 
 	var arc = d3
@@ -198,17 +214,11 @@ function averageTipVsGender() {
 		.attr('id', d => 'arc-' + d.data.gender)
 		.on('mouseover', (d, i) => {
 			d3.select('#arc-' + d.data.gender).style('fill', arcColor(d.data.gender));
-			d3.select('#label-' + d.data.gender).style(
-				'text-shadow',
-				'0 0 2px' + labelColor(d.data.gender)
-			);
+			d3.selectAll('.label-' + d.data.gender).style('font-size', '18px');
 		})
 		.on('mouseout', (d, i) => {
 			d3.select('#arc-' + d.data.gender).style('fill', color(d.data.gender));
-			d3.select('#label-' + d.data.gender).style(
-				'text-shadow',
-				'0 0 2px' + labelColor(d.data.gender)
-			);
+			d3.selectAll('.label-' + d.data.gender).style('font-size', '16px');
 		})
 		.append('title')
 		.text(d => d.data.gender);
@@ -222,7 +232,6 @@ function averageTipVsGender() {
 			console.log(d.data.gender + ': ' + arcLabel.centroid(d));
 			return 'translate(' + arcLabel.centroid(d) + ')';
 		})
-		.attr('id', d => 'label-' + d.data.gender)
 		.attr('dy', '0.35em');
 
 	text
@@ -230,6 +239,7 @@ function averageTipVsGender() {
 		.attr('x', 0)
 		.attr('y', '-0.7em')
 		.attr('fill-opacity', 0.7)
+		.attr('class', d => 'label-' + d.data.gender)
 		.text(d => d.data.gender);
 
 	text
@@ -237,7 +247,16 @@ function averageTipVsGender() {
 		.attr('x', 0)
 		.attr('y', '0.7em')
 		.attr('fill-opacity', 0.5)
+		.attr('class', d => 'label-' + d.data.gender)
 		.text(d => '$' + d.data.averageTip);
+
+	text
+		.append('tspan')
+		.attr('x', 0)
+		.attr('y', '1.6em')
+		.attr('fill-opacity', 0.5)
+		.attr('class', d => 'label-' + d.data.gender)
+		.text(d => d.data.percentage + '%');
 }
 
 function createGraphs() {
