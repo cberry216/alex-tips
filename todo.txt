@@ -1,1 +1,2 @@
 - Add button to switch between looking at data for today and for all time.
+- Implement functionality to calculate distance from RHOP and/or the previous delivery.

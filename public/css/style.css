@@ -219,26 +219,44 @@
 	padding-top: 0;
 }
 
+.data-settings {
+	width: 100%;
+	position: fixed;
+	z-index: 10;
+	background-color: #6c757d;
+}
+
+.data-settings-button {
+	border-radius: 0;
+}
+
 .data-container {
 	width: 100%;
 	height: 100%;
 	display: flex;
 	flex-wrap: wrap;
 	align-content: space-between;
-	padding: 0;
+	padding-top: 5vh;
 }
 
 .data-canvas {
 	width: 40%;
 	height: 35%;
 	margin: 5% 5%;
+	min-width: 300px;
+	position: relative;
 }
 
 .data-label {
 	position: absolute;
-	width: 30%;
+	width: 100%;
 	text-align: center;
 	text-decoration: underline;
+	min-width: 300px;
+}
+
+.label-Male {
+	box-shadow: 2px 2px aqua !important;
 }
 
 hr {

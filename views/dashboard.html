@@ -57,12 +57,43 @@
             </div>
         </div>
         <div class="data">
+            <div class="data-settings">
+                <div class="btn-group btn-group-toggle" role="group" data-toggle="buttons">
+                    <label class="btn btn-secondary active data-settings-button">
+                        <input type="radio" name="timeframe" id="timeframe-today" autocomplete="off" checked>Today
+                    </label>
+                    <label class="btn btn-secondary data-settings-button">
+                        <input type="radio" name="timeframe" id="timeframe-this-week" autocomplete="off">This
+                        Week
+                    </label>
+                    <label class="btn btn-secondary data-settings-button">
+                        <input type="radio" name="timeframe" id="timeframe-this-month" autocomplete="off">This
+                        Month
+                    </label>
+                    <label class="btn btn-secondary data-settings-button">
+                        <input type="radio" name="timeframe" id="timeframe-this-year" autocomplete="off">This
+                        Year
+                    </label>
+                    <label class="btn btn-secondary data-settings-button">
+                        <input type="radio" name="timeframe" id="timeframe-all-time" autocomplete="off">All
+                        Time
+                    </label>
+                    <!-- <button class="btn btn-secondary data-settings-button" type="button">Today</button>
+                    <button class="btn btn-secondary data-settings-button" type="button">This Week</button>
+                    <button class="btn btn-secondary data-settings-button" type="button">This Month</button>
+                    <button class="btn btn-secondary data-settings-button" type="button">This Year</button>
+                    <button class="btn btn-secondary data-settings-button" type="button">All Time</button> -->
+                </div>
+            </div>
             <div class="container data-container">
                 <div class="data-canvas" id="average-tip-vs-gender">
                     <label class="data-label">Average Tip vs. Gender</label>
                 </div>
-                <div class="data-canvas" id="average-tip-vs-age"></div>
+                <div class="data-canvas" id="average-tip-vs-age">
+                    <label class="data-label">Average Tip vs. Age</label>
+                </div>
                 <div class="data-canvas" id="average-tip-vs-gender2"></div>
+                <div class="data-canvas" id="average-tip-vs-age2"></div>
                 <div class="data-canvas" id="average-tip-vs-age2"></div>
                 <div id="data-padding"></div>
             </div>
