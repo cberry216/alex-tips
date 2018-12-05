@@ -196,10 +196,16 @@ function generateTipVsGenderCompositeData() {
 	compData[1].averageTip = (femaleSum / femaleCount).toFixed(2);
 
 	// Set percentage of total tips
-	compData[0].percentage = ((maleSum / (maleSum + femaleSum)) * 100).toFixed(2);
-	compData[1].percentage = ((femaleSum / (maleSum + femaleSum)) * 100).toFixed(
-		2
-	);
+	compData[0].percentage = (
+		(+compData[0].averageTip /
+			(+compData[0].averageTip + +compData[1].averageTip)) *
+		100
+	).toFixed(2);
+	compData[1].percentage = (
+		(+compData[1].averageTip /
+			(+compData[0].averageTip + +compData[1].averageTip)) *
+		100
+	).toFixed(2);
 
 	return compData;
 }
@@ -246,38 +252,42 @@ function generateTipVsAgeCompositeData() {
 	if (countLt20) {
 		compData.push({
 			age: 'lt20',
-			averageTip: (sumLt20 / countLt20).toFixed(2),
-			percentage: ((sumLt20 / totalSum) * 100).toFixed(2)
+			averageTip: (sumLt20 / countLt20).toFixed(2)
 		});
 	}
 	if (count2030) {
 		compData.push({
 			age: '20-30',
-			averageTip: (sum2030 / count2030).toFixed(2),
-			percentage: ((sum2030 / totalSum) * 100).toFixed(2)
+			averageTip: (sum2030 / count2030).toFixed(2)
 		});
 	}
 	if (count3040) {
 		compData.push({
 			age: '30-40',
-			averageTip: (sum3040 / count3040).toFixed(2),
-			percentage: ((sum3040 / totalSum) * 100).toFixed(2)
+			averageTip: (sum3040 / count3040).toFixed(2)
 		});
 	}
 	if (count4050) {
 		compData.push({
 			age: '40-50',
-			averageTip: (sum4050 / count4050).toFixed(2),
-			percentage: ((sum4050 / totalSum) * 100).toFixed(2)
+			averageTip: (sum4050 / count4050).toFixed(2)
 		});
 	}
 	if (count50pl) {
 		compData.push({
 			age: '50pl',
-			averageTip: (sum50pl / count50pl).toFixed(2),
-			percentage: ((sum50pl / totalSum) * 100).toFixed(2)
+			averageTip: (sum50pl / count50pl).toFixed(2)
 		});
 	}
+
+	var avgSum = 0;
+
+	for (var i = 0; i < compData.length; i++) avgSum += +compData[i].averageTip;
+
+	for (var i = 0; i < compData.length; i++)
+		compData[i].percentage = ((+compData[i].averageTip / avgSum) * 100).toFixed(
+			2
+		);
 
 	return compData;
 }
@@ -573,9 +583,8 @@ function averageTipVsAge() {
 		.text(d => d.data.percentage + '%');
 }
 
-document.getElementsByClassName('data-settings-button').on('click');
-
 function createGraphs() {
+	d3.selectAll('svg').remove();
 	averageTipVsGender();
 	averageTipVsAge();
 }
@@ -590,3 +599,4 @@ function run() {
 }
 
 window.onload = run;
+window.addEventListener('resize', createGraphs);
