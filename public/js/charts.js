@@ -74,9 +74,59 @@ function brightenEveryOtherArc(field, arcName) {
 	}
 }
 
-function generateTipVsGenderCompositeData(data) {
-	// var compData = [{ gender: 'Male' }, { gender: 'Female' }];
+function getDayOfYear(date) {
+	var start = new Date(date.getFullYear(), 0, 0);
+	var diff = date - start;
+	var millisPerDay = 1000 * 60 * 60 * 24;
+	return Math.floor(diff / millisPerDay);
+}
 
+function getWeekOfYear(date) {
+	return Math.floor(getDayOfYear(date) / 7);
+}
+
+function regenerateCompositeData(data, timePeriod) {
+	var compData;
+	if (timePeriod == 'today') {
+		compData = data.filter(elem => {
+			// console.log(elem.date.getDate() == new Date().getDate());
+			return (
+				elem.date.getDate() == new Date().getDate() &&
+				elem.date.getMonth() == new Date().getMonth() &&
+				elem.date.getFullYear() == new Date().getFullYear()
+			);
+		});
+	}
+	if (timePeriod == 'week') {
+		compData = data.filter(elem => {
+			return (
+				getWeekOfYear(elem.date) == getWeekOfYear(new Date()) &&
+				elem.date.getMonth() == new Date().getMonth() &&
+				elem.date.getFullYear() == new Date().getFullYear()
+			);
+		});
+	}
+	if (timePeriod == 'month') {
+		compData = data.filter(elem => {
+			return (
+				elem.date.getMonth() == new Date().getMonth() &&
+				elem.date.getMonth() == new Date().getMonth()
+			);
+		});
+	}
+	if (timePeriod == 'year') {
+		compData = data.filter(elem => {
+			return elem.date.getFullYear() == new Date().getFullYear();
+		});
+	}
+	if (timePeriod == 'all-time') {
+		compData = data.slice();
+	}
+
+	return compData;
+}
+
+function generateTipVsGenderCompositeData(data) {
 	var maleSum = 0;
 	var maleCount = 0;
 	var femaleSum = 0;
@@ -196,15 +246,15 @@ function generateTipVsAgeCompositeData(data) {
 	for (var i = 0; i < compData.length; i++) avgSum += +compData[i].averageTip;
 
 	for (var i = 0; i < compData.length; i++)
-		compData[i].percentage = ((+compData[i].averageTip / avgSum) * 100).toFixed(
-			2
-		);
+		compData[i].percentage = ((+compData[i].averageTip / avgSum) * 100).toFixed(2);
 
 	return compData;
 }
 
 // Create average tips vs. gender pie chart
-function averageTipVsGender(compData) {
+function averageTipVsGender(data, timePeriod) {
+	var compData = generateTipVsGenderCompositeData(regenerateCompositeData(data, timePeriod));
+
 	// Color mapping to gender for main chart
 	var genderColor = d3
 		.scaleOrdinal()
@@ -219,8 +269,7 @@ function averageTipVsGender(compData) {
 
 	// Get width and height of the given div the chart will go in
 	var chartWidth = document.getElementById('average-tip-vs-gender').offsetWidth;
-	var chartHeight = document.getElementById('average-tip-vs-gender')
-		.offsetHeight;
+	var chartHeight = document.getElementById('average-tip-vs-gender').offsetHeight;
 	var radius = setDimensions(chartWidth, chartHeight) / 2;
 
 	// Get composite data for tips based on gender
@@ -269,9 +318,7 @@ function averageTipVsGender(compData) {
 	}
 
 	// Add a group and center it within the SVG
-	var g = svg
-		.append('g')
-		.attr('transform', 'translate(' + radius + ',' + radius + ')');
+	var g = svg.append('g').attr('transform', 'translate(' + radius + ',' + radius + ')');
 
 	// Draw the graph
 	g.selectAll('path')
@@ -288,19 +335,13 @@ function averageTipVsGender(compData) {
 		.on('mouseover', (d, i) => {
 			// On mouseover, highlight the arc and increase the font-size
 			dullEveryOtherArc('gender', d.data.gender);
-			d3.select('#arc-gender-' + d.data.gender).style(
-				'fill',
-				genderArcColor(d.data.gender)
-			);
+			d3.select('#arc-gender-' + d.data.gender).style('fill', genderArcColor(d.data.gender));
 			d3.selectAll('.gender-label-' + d.data.gender).style('font-size', '18px');
 		})
 		.on('mouseout', (d, i) => {
 			// On mouseout, dehighlight the arc and decrease the font-size
 			brightenEveryOtherArc('gender', d.data.gender);
-			d3.select('#arc-gender-' + d.data.gender).style(
-				'fill',
-				genderColor(d.data.gender)
-			);
+			d3.select('#arc-gender-' + d.data.gender).style('fill', genderColor(d.data.gender));
 			d3.selectAll('.gender-label-' + d.data.gender).style('font-size', '16px');
 		})
 		.append('title')
@@ -350,7 +391,9 @@ function averageTipVsGender(compData) {
 		.text(d => d.data.percentage + '%');
 }
 
-function averageTipVsAge(compData) {
+function averageTipVsAge(data, timePeriod) {
+	var compData = generateTipVsAgeCompositeData(regenerateCompositeData(data, timePeriod));
+
 	// Color mapping to gender for main chart
 	var ageColor = d3
 		.scaleOrdinal()
@@ -414,9 +457,7 @@ function averageTipVsAge(compData) {
 	}
 
 	// Add a group and center it within the SVG
-	var g = svg
-		.append('g')
-		.attr('transform', 'translate(' + radius + ',' + radius + ')');
+	var g = svg.append('g').attr('transform', 'translate(' + radius + ',' + radius + ')');
 
 	// Draw the graph
 	g.selectAll('path')
@@ -433,10 +474,7 @@ function averageTipVsAge(compData) {
 		.on('mouseover', (d, i) => {
 			// On mouseover, highlight the arc and increase the font-size
 			dullEveryOtherArc('age', d.data.age);
-			d3.select('#arc-age-' + d.data.age).style(
-				'fill',
-				ageArcColor(d.data.age)
-			);
+			d3.select('#arc-age-' + d.data.age).style('fill', ageArcColor(d.data.age));
 			d3.selectAll('.age-label-' + d.data.age).style('font-size', '18px');
 		})
 		.on('mouseout', (d, i) => {
@@ -496,10 +534,11 @@ function averageTipVsAge(compData) {
 		.text(d => d.data.percentage + '%');
 }
 
-function createGraphs(data) {
+function createGraphs(data, timePeriod) {
 	d3.selectAll('svg').remove();
-	averageTipVsGender(generateTipVsGenderCompositeData(data));
-	averageTipVsAge(generateTipVsAgeCompositeData(data));
+	// regenerateTipVsGenderCompositeData(data, 'today');
+	averageTipVsGender(data, timePeriod);
+	averageTipVsAge(data, timePeriod);
 }
 
 export { createGraphs };

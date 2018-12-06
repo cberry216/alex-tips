@@ -1,3 +1,4 @@
 - Add button to switch between looking at data for today and for all time.
 - Implement functionality to calculate distance from RHOP and/or the previous delivery.
 - Implement functionality to switch from 2 x 1 grid to a 1 x 2 grid in mobile.
+- Make Google Maps heat map responsize.

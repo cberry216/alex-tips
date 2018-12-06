@@ -1,10 +1,8 @@
-import * as dataChart from './charts.js';
+// import * as dataChart from './charts.js';
+import { createGraphs } from './charts.js';
 
 function randomDate(startDate, endDate) {
-	return new Date(
-		startDate.getTime() +
-			Math.random() * (endDate.getTime() - startDate.getTime())
-	);
+	return new Date(startDate.getTime() + Math.random() * (endDate.getTime() - startDate.getTime()));
 }
 
 var addresses = [
@@ -39,7 +37,7 @@ for (var i = 0; i < 12; i++) {
 	});
 }
 
-var dataAllTime = [];
+var dataAllTime = data.slice();
 for (var i = 0; i < 100; i++) {
 	total = ((Math.random() * 5000) / 100).toFixed(2);
 	dataAllTime.push({
@@ -50,17 +48,23 @@ for (var i = 0; i < 100; i++) {
 		age: ages[Math.floor(Math.random() * ages.length)],
 		distance: Math.random() * 15,
 		date: randomDate(
-			new Date(
-				2018,
-				12 - 1 - Math.floor(i / 8.333),
-				Math.ceil(Math.random() * 28)
-			),
+			new Date(2018, 12 - 1 - Math.floor(i / 8.333), Math.ceil(Math.random() * 28)),
 			new Date(2018, 12 - Math.floor(i / 8.333), Math.ceil(Math.random() * 28))
 		),
 		latitude: Math.random() * (41.88257 - 41.777102) + 41.777102,
 		longitude: -1 * (Math.random() * (71.369446 - 71.126535) + 71.126535)
 	});
 }
+
+dataAllTime.push({
+	total: 35.0,
+	tip: 5.0,
+	address: addresses[0],
+	gender: 'Male',
+	age: ages[3],
+	distance: 4,
+	date: new Date(2018, 11, 3)
+});
 
 function setDailyTotalTips() {
 	var sum = 0;
@@ -77,8 +81,7 @@ function setDollarPerMile() {
 		dist += data[i].distance;
 	}
 	var dollarPerMile = (sum / dist).toFixed(2);
-	document.getElementById('total-dollar-per-mile').innerHTML =
-		'$' + dollarPerMile;
+	document.getElementById('total-dollar-per-mile').innerHTML = '$' + dollarPerMile;
 }
 
 function setTipMax() {
@@ -102,18 +105,55 @@ function setDistanceMax() {
 	document.getElementById('max-all-dist').innerHTML = allMax + ' mi';
 }
 
+// default time-period
+var timePeriod = 'today';
+
 function run() {
 	setDailyTotalTips();
 	setDollarPerMile();
 	setTipMax();
 	setTotalMax();
 	setDistanceMax();
-	dataChart.createGraphs(data);
+	createGraphs(dataAllTime, timePeriod);
 }
 
 function resizeChartsHandler() {
-	dataChart.createGraphs(data);
+	createGraphs(dataAllTime, timePeriod);
 }
 
 window.onload = run;
 window.addEventListener('resize', resizeChartsHandler);
+
+var timeButtons = Array.from(document.getElementsByClassName('data-settings-button'));
+timeButtons.forEach(button => {
+	if (button.innerText == 'Today') {
+		button.addEventListener('click', () => {
+			timePeriod = 'today';
+			resizeChartsHandler();
+		});
+	}
+	if (button.innerText == 'This Week') {
+		button.addEventListener('click', () => {
+			timePeriod = 'week';
+			resizeChartsHandler();
+		});
+	}
+	if (button.innerText == 'This Month') {
+		button.addEventListener('click', () => {
+			timePeriod = 'month';
+			resizeChartsHandler();
+		});
+	}
+	if (button.innerText == 'This Year') {
+		button.addEventListener('click', () => {
+			timePeriod = 'year';
+			resizeChartsHandler();
+		});
+	}
+	if (button.innerText == 'All Time') {
+		button.addEventListener('click', () => {
+			timePeriod = 'all-time';
+			resizeChartsHandler();
+		});
+	}
+});
