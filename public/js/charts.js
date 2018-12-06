@@ -75,7 +75,7 @@ function brightenEveryOtherArc(field, arcName) {
 }
 
 function generateTipVsGenderCompositeData(data) {
-	var compData = [{ gender: 'Male' }, { gender: 'Female' }];
+	// var compData = [{ gender: 'Male' }, { gender: 'Female' }];
 
 	var maleSum = 0;
 	var maleCount = 0;
@@ -92,21 +92,31 @@ function generateTipVsGenderCompositeData(data) {
 		}
 	}
 
-	// Set average tips
-	compData[0].averageTip = (maleSum / maleCount).toFixed(2);
-	compData[1].averageTip = (femaleSum / femaleCount).toFixed(2);
+	var compData = [];
+	var currentDataIndex = 0;
+	if (maleCount) {
+		currentDataIndex++;
+		compData.push({
+			gender: 'Male',
+			averageTip: (maleSum / (maleCount == 0 ? 1 : maleCount)).toFixed(2)
+		});
+	}
+	if (femaleCount) {
+		compData.push({
+			gender: 'Female',
+			averageTip: (femaleSum / (femaleCount == 0 ? 1 : femaleCount)).toFixed(2)
+		});
+	}
 
-	// Set percentage of total tips
-	compData[0].percentage = (
-		(+compData[0].averageTip /
-			(+compData[0].averageTip + +compData[1].averageTip)) *
-		100
-	).toFixed(2);
-	compData[1].percentage = (
-		(+compData[1].averageTip /
-			(+compData[0].averageTip + +compData[1].averageTip)) *
-		100
-	).toFixed(2);
+	var totalSum = 0;
+	for (var i = 0; i < compData.length; i++) {
+		totalSum += +compData[i].averageTip;
+	}
+
+	for (var i = 0; i < compData.length; i++) {
+		// prettier-ignore
+		compData[i].percentage = ((+compData[i].averageTip / totalSum) * 100).toFixed(2);
+	}
 
 	return compData;
 }
@@ -326,6 +336,7 @@ function averageTipVsGender(compData) {
 		.attr('fill-opacity', 0.5)
 		.attr('class', d => 'd3-data-gender-label gender-label-' + d.data.gender)
 		.attr('id', d => 'label-averageTip-' + d.data.gender)
+		.attr('fill', '#014b00')
 		.text(d => '$' + d.data.averageTip);
 
 	// Add percentage label
@@ -426,7 +437,7 @@ function averageTipVsAge(compData) {
 				'fill',
 				ageArcColor(d.data.age)
 			);
-			d3.selectAll('.age-label-' + d.data.age).style('font-size', '14px');
+			d3.selectAll('.age-label-' + d.data.age).style('font-size', '18px');
 		})
 		.on('mouseout', (d, i) => {
 			// On mouseout, dehighlight the arc and decrease the font-size
@@ -471,6 +482,7 @@ function averageTipVsAge(compData) {
 		.attr('fill-opacity', 0.5)
 		.attr('class', d => 'd3-data-age-label age-label-' + d.data.age)
 		.attr('id', d => 'label-averageTip-' + d.data.age)
+		.attr('fill', '#014b00')
 		.text(d => '$' + d.data.averageTip);
 
 	// Add percentage label
