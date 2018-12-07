@@ -4,9 +4,16 @@ var ages = ['lt20', '20-30', '30-40', '40-50', '50pl'];
 var margin, width, height, hGtW;
 margin = { top: 40, right: 0, bottom: 0, left: 0 };
 
+function setDimensions(elemWidth, elemHeight, margins) {
+	resetMargins(margins);
+
+	width = elemWidth - margin.left - margin.right;
+	height = elemHeight - margin.top - margin.bottom;
+}
+
 // Set dimensions
-function setDimensions(elemWidth, elemHeight) {
-	resetMargins(40, 0, 0, 0);
+function setCircleDimensions(elemWidth, elemHeight, margins) {
+	resetMargins(margins);
 
 	// Set hGtW to whether the height is greater than the width
 	hGtW = elemHeight > elemWidth;
@@ -35,11 +42,11 @@ function setDimensions(elemWidth, elemHeight) {
 	return minDim;
 }
 
-function resetMargins(top, right, bottom, left) {
-	margin.top = top;
-	margin.right = right;
-	margin.bottom = bottom;
-	margin.left = left;
+function resetMargins(margins) {
+	margin.top = margins[0];
+	margin.right = margins[1];
+	margin.bottom = margins[2];
+	margin.left = margins[3];
 }
 
 function dullEveryOtherArc(field, arcName) {
@@ -54,6 +61,16 @@ function dullEveryOtherArc(field, arcName) {
 			d3.selectAll('.age-label-' + age).style('fill-opacity', 0.1);
 		});
 	}
+}
+
+// x-axis grid lines
+function makeXGridlines(x) {
+	return d3.axisBottom(x).ticks(5);
+}
+
+// y-axis grid lines
+function makeYGridlines(y) {
+	return d3.axisLeft(y).ticks(5);
 }
 
 function brightenEveryOtherArc(field, arcName) {
@@ -270,7 +287,7 @@ function averageTipVsGender(data, timePeriod) {
 	// Get width and height of the given div the chart will go in
 	var chartWidth = document.getElementById('average-tip-vs-gender').offsetWidth;
 	var chartHeight = document.getElementById('average-tip-vs-gender').offsetHeight;
-	var radius = setDimensions(chartWidth, chartHeight) / 2;
+	var radius = setCircleDimensions(chartWidth, chartHeight, [40, 0, 0, 0]) / 2;
 
 	// Get composite data for tips based on gender
 	// var compData = generateTipVsGenderCompositeData();
@@ -409,7 +426,7 @@ function averageTipVsAge(data, timePeriod) {
 	// Get width and height of the given div the chart will go in
 	var chartWidth = document.getElementById('average-tip-vs-age').offsetWidth;
 	var chartHeight = document.getElementById('average-tip-vs-age').offsetHeight;
-	var radius = setDimensions(chartWidth, chartHeight) / 2;
+	var radius = setCircleDimensions(chartWidth, chartHeight, [40, 0, 0, 0]) / 2;
 
 	// Get composite data for tips based on age
 	// var compData = generateTipVsAgeCompositeData();
@@ -534,11 +551,153 @@ function averageTipVsAge(data, timePeriod) {
 		.text(d => d.data.percentage + '%');
 }
 
+function distanceVsTip(data, timePeriod) {
+	var compData = regenerateCompositeData(data, timePeriod);
+
+	// Get width and height of the given div the chart will go in
+	var chartWidth = document.getElementById('average-tip-vs-age').offsetWidth;
+	var chartHeight = document.getElementById('average-tip-vs-age').offsetHeight;
+	setDimensions(chartWidth, chartHeight, [20, 0, 30, 40]);
+
+	var x = d3
+		.scaleLinear()
+		.domain(d3.extent(data, d => d.distance))
+		.range([0, width]);
+	var y = d3
+		.scaleLinear()
+		.domain([0, d3.max(data, d => d.tip)])
+		.range([height, 0]);
+
+	var valueLine = d3
+		.line()
+		.x(d => x(d.distance))
+		.y(d => y(d.tip));
+
+	var svg = d3
+		.select('#distance-vs-tip')
+		.append('svg')
+		.attr('width', width + margin.left + margin.right)
+		.attr('height', height + margin.top + margin.bottom)
+		.append('g')
+		.attr('transform', 'translate(' + margin.left + ',' + margin.top + ')')
+		.attr('text-anchor', 'middle');
+
+	// Add scatter plot
+	svg
+		.selectAll('dot')
+		.data(compData)
+		.enter()
+		.append('circle')
+		.attr('r', 5)
+		.style('fill', 'steelblue')
+		.attr('cx', d => x(d.distance))
+		.attr('cy', d => y(d.tip))
+		.attr('id', d => 'data-point-' + d.id)
+		// TODO: Change to on click
+		.on('mouseover', d => {
+			d3.select('#data-point-' + d.id).style('fill', 'orange');
+			var dist = svg
+				.append('text')
+				.attr('id', 'data-point-dist-' + d.id)
+				.attr('text-anchor', 'start')
+				.style('font-size', '12px')
+				.style('text-shadow', '2px 2px 2px white')
+				.text('Dist: ' + d.distance.toFixed(2) + ' mi');
+
+			var tip = svg
+				.append('text')
+				.attr('transform', 'translate(' + (x(d.distance) + 25) + ',' + (y(d.tip) - 5) + ')')
+				.attr('id', 'data-point-tip-' + d.id)
+				.attr('text-anchor', 'start')
+				.style('font-size', '12px')
+				.style('text-shadow', '2px 2px 2px white')
+				.text('Tip: $' + d.tip.toFixed(2));
+
+			if (x(d.distance) < (width * 3) / 4 && y(d.tip) > height / 5) {
+				console.log('lower-left');
+				dist.attr('transform', 'translate(' + x(d.distance) + ',' + (y(d.tip) - 15) + ')');
+				tip.attr('transform', 'translate(' + x(d.distance) + ',' + (y(d.tip) - 5) + ')');
+			} else if (x(d.distance) < (width * 3) / 4 && y(d.tip) <= height / 5) {
+				console.log('upper-left');
+				dist.attr('transform', 'translate(' + x(d.distance) + ',' + (y(d.tip) + 15) + ')');
+				tip.attr('transform', 'translate(' + x(d.distance) + ',' + (y(d.tip) + 25) + ')');
+			} else if (x(d.distance) >= (width * 3) / 4 && y(d.tip) > height / 5) {
+				console.log('lower-right');
+				dist.attr('transform', 'translate(' + (x(d.distance) - 65) + ',' + (y(d.tip) - 15) + ')');
+				tip.attr('transform', 'translate(' + (x(d.distance) - 65) + ',' + (y(d.tip) - 5) + ')');
+			} else {
+				console.log('upper-right');
+				dist.attr('transform', 'translate(' + (x(d.distance) - 65) + ',' + (y(d.tip) + 15) + ')');
+				tip.attr('transform', 'translate(' + (x(d.distance) - 65) + ',' + (y(d.tip) + 25) + ')');
+			}
+		})
+		.on('mouseout', d => {
+			d3.select('#data-point-' + d.id).style('fill', 'steelblue');
+			svg.select('#data-point-dist-' + d.id).remove();
+			svg.select('#data-point-tip-' + d.id).remove();
+		});
+
+	// Add x-axis
+	svg
+		.append('g')
+		.attr('transform', ' translate(0, ' + height + ')')
+		.attr('class', 'axis')
+		.call(d3.axisBottom(x));
+
+	// Add x-axis label
+	svg
+		.append('text')
+		.attr('transform', 'translate(' + width / 2 + ',' + (+height + margin.top + 10) + ')')
+		.text('Distance');
+
+	// Add the x-axis grid lines
+	svg
+		.append('g')
+		.attr('class', 'grid')
+		.attr('transform', 'translate(0,' + height + ')')
+		.call(
+			makeXGridlines(x)
+				.tickSize(-height)
+				.tickFormat('')
+		);
+
+	// Add the y-axis
+	svg
+		.append('g')
+		.attr('class', 'axis')
+		.call(d3.axisLeft(y));
+
+	// Add the y-axis label
+	svg
+		.append('text')
+		.attr('transform', 'rotate(-90)')
+		.attr('y', 0 - margin.left)
+		.attr('x', 0 - height / 2)
+		.attr('dy', '1em')
+		.text('Tip');
+
+	// Add the y-axis grid lines
+	svg
+		.append('g')
+		.attr('class', 'grid')
+		.call(
+			makeYGridlines(y)
+				.tickSize(-width)
+				.tickFormat('')
+		);
+
+	// svg
+	// 	.append('path')
+	// 	.data([data])
+	// 	.attr('class', 'line')
+	// 	.attr('d', valueLine);
+}
+
 function createGraphs(data, timePeriod) {
 	d3.selectAll('svg').remove();
-	// regenerateTipVsGenderCompositeData(data, 'today');
 	averageTipVsGender(data, timePeriod);
 	averageTipVsAge(data, timePeriod);
+	distanceVsTip(data, timePeriod);
 }
 
 export { createGraphs };

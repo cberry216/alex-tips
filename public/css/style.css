@@ -259,6 +259,16 @@
 	box-shadow: 2px 2px aqua !important;
 }
 
+.grid line {
+	stroke: grey;
+	opacity: 0.2;
+	shape-rendering: crispEdges;
+}
+
+.grid path {
+	stroke-width: 0;
+}
+
 hr {
 	margin: 3em 0;
 	color: #555555;

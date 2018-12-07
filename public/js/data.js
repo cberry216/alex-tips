@@ -21,12 +21,15 @@ var addresses = [
 var genders = ['Male', 'Female'];
 var ages = ['lt20', '20-30', '30-40', '40-50', '50pl'];
 
+var id = 0;
+
 var data = [];
 for (var i = 0; i < 12; i++) {
 	var total = ((Math.random() * 5000) / 100).toFixed(2);
-	data.push({
+	var toAdd = {
+		id: id++,
 		total: +total,
-		tip: +(total * (Math.random() * 0.5)).toFixed(2),
+		// tip: +(total * (Math.random() * 0.5)).toFixed(2),
 		address: addresses[Math.floor(Math.random() * addresses.length)],
 		gender: Math.random() < 0.5 ? 'Male' : 'Female',
 		age: ages[Math.floor(Math.random() * ages.length)],
@@ -34,13 +37,16 @@ for (var i = 0; i < 12; i++) {
 		date: new Date(),
 		latitude: Math.random() * (41.88257 - 41.777102) + 41.777102,
 		longitude: -1 * (Math.random() * (71.369446 - 71.126535) + 71.126535)
-	});
+	};
+	toAdd.tip = +((toAdd.total + toAdd.distance) * (Math.random() * 0.5)).toFixed(2);
+	data.push(toAdd);
 }
 
 var dataAllTime = data.slice();
 for (var i = 0; i < 100; i++) {
 	total = ((Math.random() * 5000) / 100).toFixed(2);
 	dataAllTime.push({
+		id: id++,
 		total: +total,
 		tip: +(total * (Math.random() * 0.5)).toFixed(2),
 		address: addresses[Math.floor(Math.random() * addresses.length)],
