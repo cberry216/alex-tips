@@ -553,7 +553,7 @@ function averageTipVsAge(data, timePeriod) {
 
 function distanceVsTip(data, timePeriod) {
 	var compData = regenerateCompositeData(data, timePeriod);
-	var clicked = {};
+
 	// Get width and height of the given div the chart will go in
 	var chartWidth = document.getElementById('average-tip-vs-age').offsetWidth;
 	var chartHeight = document.getElementById('average-tip-vs-age').offsetHeight;
@@ -594,59 +594,48 @@ function distanceVsTip(data, timePeriod) {
 		.attr('cy', d => y(d.tip))
 		.attr('id', d => 'data-point-' + d.id)
 		// TODO: Change to on click
-		.on('click', d => {
-			if (clicked[d.id] == null) {
-				clicked[d.id] = false;
-			}
-			if (clicked[d.id]) {
-				clicked[d.id] = !clicked[d.id];
-				d3.select('#data-point-' + d.id).style('fill', 'steelblue');
-				svg.select('#data-point-dist-' + d.id).remove();
-				svg.select('#data-point-tip-' + d.id).remove();
+		.on('mouseover', d => {
+			d3.select('#data-point-' + d.id).style('fill', 'orange');
+			var dist = svg
+				.append('text')
+				.attr('id', 'data-point-dist-' + d.id)
+				.attr('text-anchor', 'start')
+				.style('font-size', '12px')
+				.style('text-shadow', '2px 2px 2px white')
+				.text('Dist: ' + d.distance.toFixed(2) + ' mi');
+
+			var tip = svg
+				.append('text')
+				.attr('transform', 'translate(' + (x(d.distance) + 25) + ',' + (y(d.tip) - 5) + ')')
+				.attr('id', 'data-point-tip-' + d.id)
+				.attr('text-anchor', 'start')
+				.style('font-size', '12px')
+				.style('text-shadow', '2px 2px 2px white')
+				.text('Tip: $' + d.tip.toFixed(2));
+
+			if (x(d.distance) < (width * 3) / 4 && y(d.tip) > height / 5) {
+				console.log('lower-left');
+				dist.attr('transform', 'translate(' + x(d.distance) + ',' + (y(d.tip) - 20) + ')');
+				tip.attr('transform', 'translate(' + x(d.distance) + ',' + (y(d.tip) - 10) + ')');
+			} else if (x(d.distance) < (width * 3) / 4 && y(d.tip) <= height / 5) {
+				console.log('upper-left');
+				dist.attr('transform', 'translate(' + x(d.distance) + ',' + (y(d.tip) + 20) + ')');
+				tip.attr('transform', 'translate(' + x(d.distance) + ',' + (y(d.tip) + 30) + ')');
+			} else if (x(d.distance) >= (width * 3) / 4 && y(d.tip) > height / 5) {
+				console.log('lower-right');
+				dist.attr('transform', 'translate(' + (x(d.distance) - 65) + ',' + (y(d.tip) - 20) + ')');
+				tip.attr('transform', 'translate(' + (x(d.distance) - 65) + ',' + (y(d.tip) - 10) + ')');
 			} else {
-				clicked[d.id] = !clicked[d.id];
-				d3.select('#data-point-' + d.id).style('fill', 'orange');
-				var dist = svg
-					.append('text')
-					.attr('id', 'data-point-dist-' + d.id)
-					.attr('text-anchor', 'start')
-					.style('font-size', '12px')
-					.style('text-shadow', '2px 2px 2px white')
-					.text('Dist: ' + d.distance.toFixed(2) + ' mi');
-
-				var tip = svg
-					.append('text')
-					.attr('transform', 'translate(' + (x(d.distance) + 25) + ',' + (y(d.tip) - 5) + ')')
-					.attr('id', 'data-point-tip-' + d.id)
-					.attr('text-anchor', 'start')
-					.style('font-size', '12px')
-					.style('text-shadow', '2px 2px 2px white')
-					.text('Tip: $' + d.tip.toFixed(2));
-
-				if (x(d.distance) < (width * 3) / 4 && y(d.tip) > height / 5) {
-					console.log('lower-left');
-					dist.attr('transform', 'translate(' + x(d.distance) + ',' + (y(d.tip) - 15) + ')');
-					tip.attr('transform', 'translate(' + x(d.distance) + ',' + (y(d.tip) - 5) + ')');
-				} else if (x(d.distance) < (width * 3) / 4 && y(d.tip) <= height / 5) {
-					console.log('upper-left');
-					dist.attr('transform', 'translate(' + x(d.distance) + ',' + (y(d.tip) + 15) + ')');
-					tip.attr('transform', 'translate(' + x(d.distance) + ',' + (y(d.tip) + 25) + ')');
-				} else if (x(d.distance) >= (width * 3) / 4 && y(d.tip) > height / 5) {
-					console.log('lower-right');
-					dist.attr('transform', 'translate(' + (x(d.distance) - 65) + ',' + (y(d.tip) - 15) + ')');
-					tip.attr('transform', 'translate(' + (x(d.distance) - 65) + ',' + (y(d.tip) - 5) + ')');
-				} else {
-					console.log('upper-right');
-					dist.attr('transform', 'translate(' + (x(d.distance) - 65) + ',' + (y(d.tip) + 15) + ')');
-					tip.attr('transform', 'translate(' + (x(d.distance) - 65) + ',' + (y(d.tip) + 25) + ')');
-				}
+				console.log('upper-right');
+				dist.attr('transform', 'translate(' + (x(d.distance) - 65) + ',' + (y(d.tip) + 20) + ')');
+				tip.attr('transform', 'translate(' + (x(d.distance) - 65) + ',' + (y(d.tip) + 30) + ')');
 			}
+		})
+		.on('mouseout', d => {
+			d3.select('#data-point-' + d.id).style('fill', 'steelblue');
+			svg.select('#data-point-dist-' + d.id).remove();
+			svg.select('#data-point-tip-' + d.id).remove();
 		});
-	// .on('click', d => {
-	// 	d3.select('#data-point-' + d.id).style('fill', 'steelblue');
-	// 	svg.select('#data-point-dist-' + d.id).remove();
-	// 	svg.select('#data-point-tip-' + d.id).remove();
-	// });
 
 	// Add x-axis
 	svg
