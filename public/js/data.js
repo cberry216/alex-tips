@@ -1,5 +1,6 @@
 // import * as dataChart from './charts.js';
 import { createGraphs } from './charts.js';
+import { initMap, updateData } from './map.js';
 
 function randomDate(startDate, endDate) {
 	return new Date(startDate.getTime() + Math.random() * (endDate.getTime() - startDate.getTime()));
@@ -29,7 +30,6 @@ for (var i = 0; i < 12; i++) {
 	var toAdd = {
 		id: id++,
 		total: +total,
-		// tip: +(total * (Math.random() * 0.5)).toFixed(2),
 		address: addresses[Math.floor(Math.random() * addresses.length)],
 		gender: Math.random() < 0.5 ? 'Male' : 'Female',
 		age: ages[Math.floor(Math.random() * ages.length)],
@@ -121,10 +121,16 @@ function run() {
 	setTotalMax();
 	setDistanceMax();
 	createGraphs(dataAllTime, timePeriod);
+	initMap(dataAllTime, timePeriod);
 }
 
 function resizeChartsHandler() {
 	createGraphs(dataAllTime, timePeriod);
+}
+
+function updateAllData() {
+	createGraphs(dataAllTime, timePeriod);
+	updateData(dataAllTime, timePeriod);
 }
 
 window.onload = run;
@@ -135,31 +141,31 @@ timeButtons.forEach(button => {
 	if (button.innerText == 'Today') {
 		button.addEventListener('click', () => {
 			timePeriod = 'today';
-			resizeChartsHandler();
+			updateAllData();
 		});
 	}
 	if (button.innerText == 'This Week') {
 		button.addEventListener('click', () => {
 			timePeriod = 'week';
-			resizeChartsHandler();
+			updateAllData();
 		});
 	}
 	if (button.innerText == 'This Month') {
 		button.addEventListener('click', () => {
 			timePeriod = 'month';
-			resizeChartsHandler();
+			updateAllData();
 		});
 	}
 	if (button.innerText == 'This Year') {
 		button.addEventListener('click', () => {
 			timePeriod = 'year';
-			resizeChartsHandler();
+			updateAllData();
 		});
 	}
 	if (button.innerText == 'All Time') {
 		button.addEventListener('click', () => {
 			timePeriod = 'all-time';
-			resizeChartsHandler();
+			updateAllData();
 		});
 	}
 });

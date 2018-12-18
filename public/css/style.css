@@ -47,6 +47,10 @@
 	width: 100%;
 }
 
+#tip-heat-map-label {
+	background-color: white;
+}
+
 .money-input {
 	margin-left: 0.5em;
 	width: 100%;
@@ -242,7 +246,7 @@
 .data-canvas {
 	width: 40%;
 	height: 35%;
-	margin: 5% 5%;
+	margin: 5% auto;
 	min-width: 300px;
 	position: relative;
 }
@@ -251,8 +255,12 @@
 	position: absolute;
 	width: 100%;
 	text-align: center;
-	text-decoration: underline;
 	min-width: 300px;
+	color: steelblue;
+}
+
+.data-label:hover {
+	text-decoration: none;
 }
 
 .label-Male {
@@ -275,8 +283,38 @@ hr {
 	background-color: #555555;
 }
 
+@media screen and (max-width: 839px) {
+	.grid-container {
+		display: block;
+		/* width: 100%; */
+		position: fixed;
+		height: 200vh;
+		min-height: 200vh;
+		/* overflow: scroll; */
+	}
+
+	.profile {
+		width: 100%;
+		height: 100vh;
+		background-color: #b4c4d0;
+		overflow: scroll;
+		/* display: none; */
+	}
+
+	.data {
+		width: 100% !important;
+		height: 100vh;
+		background-color: white;
+		overflow: scroll;
+		/* display: none; */
+	}
+
+	.data-settings-button {
+		font-size: 0.9em;
+	}
+}
+
 @media only screen and (max-width: 768px) {
-	/* TODO: change font size for 'new-tip.html' on mobile */
 	.body {
 		width: 100vw;
 	}

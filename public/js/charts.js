@@ -700,4 +700,4 @@ function createGraphs(data, timePeriod) {
 	distanceVsTip(data, timePeriod);
 }
 
-export { createGraphs };
+export { createGraphs, regenerateCompositeData };

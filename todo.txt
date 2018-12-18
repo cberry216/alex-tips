@@ -2,3 +2,8 @@
 - Implement functionality to calculate distance from RHOP and/or the previous delivery.
 - Implement functionality to switch from 2 x 1 grid to a 1 x 2 grid in mobile.
 - Make Google Maps heat map responsize.
+- Make bigger circles on heatmap if tip is bigger?
+- Modularize all charts and graphs so that they are contained in their own file (this way
+  on each graph-page we only have to import 1-2 small files instead of one huge file).
+- On dedicated heatmap page, include marker for each delivery and a heatmap both of which can be toggleable.
+- Add a 'Tips' tab to the nav which will list all tips in chronological order (or any specified order).
